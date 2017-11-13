@@ -11,14 +11,13 @@
     tools:layout_editor_absoluteY="81dp">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:id="@+id/userProfileImg"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="103dp"
+        android:layout_marginTop="52dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/loginBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/profiledefault" />
@@ -27,20 +26,49 @@
         android:id="@+id/textView2"
         android:layout_width="352dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Kaveri"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        app:layout_constraintStart_toEndOf="@+id/userProfileImg"
+        app:layout_constraintTop_toTopOf="@+id/userProfileImg" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:background="@android:color/transparent"
+        android:onClick="loginButtonNavClicked"
+        android:text="LOGIN"
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/addChannelBtn"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/app_name"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:onClick="addChannelBtnClick"
+        app:layout_constraintBottom_toBottomOf="@+id/loginBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/loginBtn"
+        app:srcCompat="@drawable/addchannelbutton" />
 
     <TextView
-        android:id="@+id/emilText"
+        android:id="@+id/userEmailText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="kaver.hindi@gmail.com"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
+        android:text="kaveri.hindi@gmail.com"
+        app:layout_constraintStart_toEndOf="@+id/userProfileImg"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 </android.support.constraint.ConstraintLayout>
