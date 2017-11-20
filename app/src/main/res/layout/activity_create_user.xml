@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/signupUserNameText" />
 
     <EditText
-        android:id="@+id/signupPassword"
+        android:id="@+id/signupPasswordText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -61,7 +61,7 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/signupPasswordText" />
 
     <ImageView
         android:id="@+id/signupUserAvatarImg"
@@ -115,5 +115,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="192dp" />
+
+    <ProgressBar
+        android:id="@+id/spinner"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/generate_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
