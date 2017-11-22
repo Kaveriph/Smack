@@ -33,9 +33,9 @@ class CreateUserActivity : AppCompatActivity() {
 
         signupUserAvatarImg.setBackgroundColor(Color.rgb(r,g,b))
 
-        val savedR = r/255
-        val savedG = g/255
-        val savedB = b/255
+        val savedR = (r.toDouble()/255)
+        val savedG = (g.toDouble()/255)
+        val savedB = (b.toDouble()/255)
 
         avatarColor = "[$savedR, $savedG, $savedB, 1]"
     }
@@ -66,8 +66,7 @@ class CreateUserActivity : AppCompatActivity() {
                     AuthService.loginUser(this, registerUser, { loginSucc ->
                         if (loginSucc) {
                             println("$TAG Logged in successfully")
-                            AuthService.createUser(this, CreateUser(userName, registerUser.email, userAvatar, avatarColor),
-                                    { createUserSucc ->
+                            AuthService.createUser(this, CreateUser(userName, registerUser.email, userAvatar, avatarColor), { createUserSucc ->
                                 if (createUserSucc) {
                                     println("$TAG created user succesfully")
                                     enableSpinner(false)

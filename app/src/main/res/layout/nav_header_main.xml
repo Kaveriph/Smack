@@ -23,7 +23,7 @@
         app:srcCompat="@drawable/profiledefault" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/userNameText"
         android:layout_width="352dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -68,6 +68,6 @@
         android:layout_marginRight="0dp"
         android:text="kaveri.hindi@gmail.com"
         app:layout_constraintStart_toEndOf="@+id/userProfileImg"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/userNameText" />
 
 </android.support.constraint.ConstraintLayout>

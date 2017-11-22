@@ -30,7 +30,9 @@ object AuthService {
     val MEDIA_TYPE = "application/json; charset=utf-8"
     lateinit var token: String
     lateinit var email: String
-     fun registerUser(context : Context, user:RegisterUser, complete: (Boolean) -> Unit) {
+    var isLogedIn: Boolean = false
+
+    fun registerUser(context : Context, user:RegisterUser, complete: (Boolean) -> Unit) {
 
          var jsonObg = Gson().toJson(user)
 
@@ -89,6 +91,7 @@ object AuthService {
                     try {
                         email = response.getString("user")
                         token = response.getString("token")
+                        isLogedIn = true
                     } catch (e: JSONException) {
                         println("Exception : ${e.printStackTrace()}")
                     }
@@ -149,4 +152,5 @@ object AuthService {
 
         Volley.newRequestQueue(context).add(request)
     }
+
 }
