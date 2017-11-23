@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.example.kaveri.smack.AsyncTask.LoginAsyncTask
 import com.example.kaveri.smack.R
 import com.example.kaveri.smack.model.RegisterUser
 import com.example.kaveri.smack.services.AuthService
@@ -19,13 +18,47 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun onLoginClicked(view: View) {
+        enableDisableSpinner(true);
+        val email = emailText.text.toString()
+        val password = passwordText.text.toString()
+        if(email.isNotEmpty() && password.isNotEmpty()) {
+            AuthService.loginUser(this, RegisterUser(email, password), { succ ->
+                Toast.makeText(this, "success : $succ", Toast.LENGTH_SHORT).show()
+                if (succ) {
+                    println("Token : ${AuthService.token}")
+                    AuthService.findUserByEmail(this, { findSucc ->
+                        enableDisableSpinner(false);
+                        if (findSucc) {
+                            println("found the user sucessfully")
+                            finish()
+                        } else {
+                            println("failed to find the user")
+                        }
+                    })
+                } else {
+                    displayError("Failed to login");
+                    enableDisableSpinner(false);
+                }
+            })
+        } else {
+            displayError("")
+            enableDisableSpinner(false)
+        }
+    }
 
-        AuthService.loginUser(this, RegisterUser(emailText.text.toString(),passwordText.text.toString()), {succ ->
-                    Toast.makeText(this, "success : $succ", Toast.LENGTH_SHORT).show()
-            if(succ) {
-                println("Token : ${AuthService.token}")
-            }
-        })
+    private fun enableDisableSpinner(enable:Boolean) {
+        if(enable)
+            progressBar.visibility = View.VISIBLE;
+        else
+            progressBar.visibility = View.INVISIBLE;
+
+        login_loginBtn.isEnabled = !enable;
+        signUpText.isEnabled = !enable;
+        no_account_text.isEnabled = !enable;
+    }
+
+    private fun displayError(strMsg: String) {
+        Toast.makeText(this,strMsg, Toast.LENGTH_SHORT);
     }
 
     fun signUpHereClicked(view:View) {

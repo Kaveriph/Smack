@@ -1,6 +1,9 @@
 package com.example.kaveri.smack.services
 
 import android.content.Context
+import android.content.Intent
+import android.support.v4.content.LocalBroadcastManager
+import android.util.Log
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
@@ -9,10 +12,7 @@ import com.android.volley.toolbox.Volley
 import com.example.kaveri.smack.R
 import com.example.kaveri.smack.model.CreateUser
 import com.example.kaveri.smack.model.RegisterUser
-import com.example.kaveri.smack.utilities.AUTH_KEY_NAME
-import com.example.kaveri.smack.utilities.URL_CREATE_USER
-import com.example.kaveri.smack.utilities.URL_LOGIN
-import com.example.kaveri.smack.utilities.URL_REGISTER
+import com.example.kaveri.smack.utilities.*
 import com.google.gson.Gson
 import okhttp3.*
 import org.json.JSONException
@@ -40,7 +40,7 @@ object AuthService {
              println("$TAG response")
              complete(true)
          }, com.android.volley.Response.ErrorListener{ error: VolleyError ->
-             println("$TAG Error: ${error.printStackTrace()}")
+             println("$TAG Error: couldn't register user ${error.printStackTrace()}")
              complete(false)
          }) {
              override fun getBodyContentType(): String {
@@ -98,7 +98,7 @@ object AuthService {
                     complete(true)
                 },
                 com.android.volley.Response.ErrorListener { error ->
-                    println("$TAG error $error")
+                    println("$TAG error : couldn't login user $error")
                     complete(false)
                 }) {
             override fun getBodyContentType(): String {
@@ -132,7 +132,7 @@ object AuthService {
             complete(true)
         }, com.android.volley.Response.ErrorListener {
             error ->
-            println("error $error")
+            println("error : couldn't create user $error")
             complete(false)
         }){
             override fun getBody(): ByteArray {
@@ -153,4 +153,38 @@ object AuthService {
         Volley.newRequestQueue(context).add(request)
     }
 
+    fun findUserByEmail(context:Context, complete: (Boolean) -> Unit) {
+        val findUserRequest = object : JsonObjectRequest(Method.GET, "$URL_GET_USER$email", null, com.android.volley.Response.Listener {
+            response -> Log.e(TAG,"response : $response")
+            try {
+                UserDataService.name = response.getString("name")
+                UserDataService.email = response.getString("email")
+                UserDataService.avatarColor = response.getString("avatarColor")
+                UserDataService.avatarName = response.getString("avatarName")
+                UserDataService.id = response.getString("_id")
+
+                var userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
+                LocalBroadcastManager.getInstance(context).sendBroadcast(userDataChange)
+                complete(true)
+            } catch (e:Exception) {
+                Log.e(TAG,"exception parsing the user data ${e.printStackTrace()}")
+                complete(false)
+            }
+        }, com.android.volley.Response.ErrorListener {
+            error -> Log.e(TAG,"Error : couldn't get user $error")
+            complete(false)
+        }) {
+            override fun getBodyContentType(): String {
+                return MEDIA_TYPE
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                var headers = HashMap<String, String>()
+                headers.put(AUTH_KEY_NAME,"Bearer ${AuthService.token}")
+                return headers
+            }
+        }
+
+        Volley.newRequestQueue(context).add(findUserRequest)
+    }
 }

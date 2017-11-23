@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Kaveri"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toEndOf="@+id/userProfileImg"
         app:layout_constraintTop_toTopOf="@+id/userProfileImg" />
@@ -40,7 +39,7 @@
         android:layout_marginBottom="8dp"
         android:background="@android:color/transparent"
         android:onClick="loginButtonNavClicked"
-        android:text="LOGIN"
+        android:text="@string/login"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -66,7 +65,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="0dp"
-        android:text="kaveri.hindi@gmail.com"
         app:layout_constraintStart_toEndOf="@+id/userProfileImg"
         app:layout_constraintTop_toBottomOf="@+id/userNameText" />
 
