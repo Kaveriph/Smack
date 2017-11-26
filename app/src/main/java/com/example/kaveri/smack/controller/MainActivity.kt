@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.example.kaveri.smack.R
 import com.example.kaveri.smack.model.Channel
+import com.example.kaveri.smack.model.Message
 import com.example.kaveri.smack.services.AuthService
 import com.example.kaveri.smack.services.MessageService
 import com.example.kaveri.smack.services.UserDataService
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         socket.connect()
         socket.on("channelCreated", onNewChannel)
+        socket.on("messageCreated", onNewMessage)
 
         channel_list.setOnItemClickListener{_, _, i, _ ->
             selectedChannel = MessageService.channels.get(i)
@@ -110,7 +112,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sendMessageBtnClicked(view:View) {
-        hideKeyboard()
+
+        if(App.prefs.isLoggedIn && messageText.text.toString().isNotEmpty() && selectedChannel != null) {
+            val userId = UserDataService.id
+            val channelId = selectedChannel?.id
+            socket.emit("newMessage",messageText.text.toString(),userId, channelId,
+                    UserDataService.name, UserDataService.avatarName, UserDataService.avatarColor)
+            messageText.text.clear()
+            hideKeyboard()
+        }
     }
 
     var broadCastReceiver = object : BroadcastReceiver() {
@@ -164,6 +174,21 @@ class MainActivity : AppCompatActivity() {
             MessageService.channels.add(newChannel)
             println("${newChannel.name} ${newChannel.description} ${newChannel.id}")
             channelAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private val onNewMessage = Emitter.Listener { args ->
+        runOnUiThread{
+            val messageBody = args[0] as String
+            val channelId = args[2] as String
+            val userName = args[3] as String
+            val userAvatar = args[4] as String
+            val userAvatarColor = args[5] as String
+            val id = args[6] as String
+            val timeStamp = args[7] as String
+            val newMessage = Message(messageBody, userName, channelId, userAvatar, userAvatarColor, id, timeStamp)
+            MessageService.messages.add(newMessage)
+            println("New message : ${newMessage.message}")
         }
     }
 }

@@ -7,6 +7,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.example.kaveri.smack.controller.App
 import com.example.kaveri.smack.model.Channel
+import com.example.kaveri.smack.model.Message
 import com.example.kaveri.smack.utilities.AUTH_KEY_NAME
 import com.example.kaveri.smack.utilities.URL_GET_CHANNELS
 import org.json.JSONException
@@ -20,7 +21,7 @@ object MessageService {
     var channels = ArrayList<Channel>()
     val MEDIA_TYPE = "application/json; charset=utf-8"
     val TAG = "MessageService"
-
+    val messages = ArrayList<Message>()
 
     fun getChannels(complete:(Boolean) -> Unit) {
         var channelRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null, Response.Listener { response ->
