@@ -9,8 +9,13 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.TextView
 import com.example.kaveri.smack.R
 import com.example.kaveri.smack.R.id.*
 import com.example.kaveri.smack.services.AuthService
@@ -33,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadCastReceiver, IntentFilter(BROADCAST_USER_DATA_CHANGE) )
-
+        hideKeyboard()
     }
 
     override fun onBackPressed() {
@@ -59,7 +64,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addChannelBtnClick(view:View) {
-
+        if(AuthService.isLogedIn) {
+            val builder = AlertDialog.Builder(this)
+            val dialogView = layoutInflater.inflate(R.layout.add_channel_dialogue, null)
+            builder.setView(dialogView).create()
+            builder.setPositiveButton("Add") {dialogInterface, i ->
+                //add the channel
+                val channelNameTxt = dialogView.findViewById<EditText>(R.id.addchannel_name_txt)
+                val channelDescText = dialogView.findViewById<EditText>(R.id.addchannel_desc_txt)
+                val channelName = channelNameTxt.text.toString()
+                val channelDescription = channelDescText.text.toString()
+                hideKeyboard()
+            }
+            builder.setNegativeButton("Cancel") {dialogInterface, i ->
+                //cancel or closethe dialog
+                hideKeyboard()
+            }
+            builder.show()
+        }
     }
 
     fun sendMessageBtnClicked(view:View) {
@@ -82,5 +104,12 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadCastReceiver)
+    }
+
+    fun hideKeyboard() {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if(inputManager.isAcceptingText) {
+            inputManager.hideSoftInputFromInputMethod(currentFocus.windowToken, 0)
+        }
     }
 }
