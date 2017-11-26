@@ -1,6 +1,7 @@
 package com.example.kaveri.smack.services
 
 import android.graphics.Color
+import com.example.kaveri.smack.controller.App
 import java.util.*
 
 /**
@@ -19,9 +20,9 @@ object UserDataService {
         email = ""
         avatarName = ""
         avatarColor = ""
-        AuthService.token = ""
-        AuthService.isLogedIn = false
-        //AuthService.userEmail = ""
+        App.prefs.authToken = ""
+        App.prefs.isLoggedIn = false
+        App.prefs.userEmail= ""
     }
     fun returnAvatarColor(componets:String):Int  {
 

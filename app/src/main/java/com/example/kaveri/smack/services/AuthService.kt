@@ -9,16 +9,13 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.kaveri.smack.R
+import com.example.kaveri.smack.controller.App
 import com.example.kaveri.smack.model.CreateUser
 import com.example.kaveri.smack.model.RegisterUser
 import com.example.kaveri.smack.utilities.*
 import com.google.gson.Gson
 import okhttp3.*
 import org.json.JSONException
-import org.json.JSONObject
-import java.lang.reflect.Method
-import java.util.*
 import kotlin.collections.HashMap
 
 /**
@@ -28,9 +25,9 @@ object AuthService {
 
     val TAG = AuthService.javaClass.simpleName
     val MEDIA_TYPE = "application/json; charset=utf-8"
-    lateinit var token: String
+   /* lateinit var token: String
     lateinit var email: String
-    var isLogedIn: Boolean = false
+    var isLogedIn: Boolean = false*/
 
     fun registerUser(context : Context, user:RegisterUser, complete: (Boolean) -> Unit) {
 
@@ -54,7 +51,7 @@ object AuthService {
          }
          request.setRetryPolicy(DefaultRetryPolicy(30000,
                  DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
-         Volley.newRequestQueue(context).add(request)
+        App.prefs.requestQueue.add(request)
      }
 
     fun registerUser(context: Context, user: RegisterUser): Response {
@@ -89,9 +86,9 @@ object AuthService {
                 com.android.volley.Response.Listener { response ->
                     println("$TAG response $response")
                     try {
-                        email = response.getString("user")
-                        token = response.getString("token")
-                        isLogedIn = true
+                        App.prefs.userEmail = response.getString("user")
+                        App.prefs.authToken = response.getString("token")
+                        App.prefs.isLoggedIn = true
                     } catch (e: JSONException) {
                         println("Exception : ${e.printStackTrace()}")
                     }
@@ -110,7 +107,7 @@ object AuthService {
             }
         }
 
-        Volley.newRequestQueue(context).add(request)
+        App.prefs.requestQueue.add(request)
     }
 
     fun createUser(context:Context, createUser: CreateUser, complete:(Boolean) -> Unit) {
@@ -145,16 +142,16 @@ object AuthService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                headers.put(AUTH_KEY_NAME,"Bearer ${AuthService.token}")
+                headers.put(AUTH_KEY_NAME,"Bearer ${App.prefs.authToken}")
                 return headers
             }
         }
 
-        Volley.newRequestQueue(context).add(request)
+        App.prefs.requestQueue.add(request)
     }
 
     fun findUserByEmail(context:Context, complete: (Boolean) -> Unit) {
-        val findUserRequest = object : JsonObjectRequest(Method.GET, "$URL_GET_USER$email", null, com.android.volley.Response.Listener {
+        val findUserRequest = object : JsonObjectRequest(Method.GET, "$URL_GET_USER${App.prefs.userEmail}", null, com.android.volley.Response.Listener {
             response -> Log.e(TAG,"response : $response")
             try {
                 UserDataService.name = response.getString("name")
@@ -180,11 +177,11 @@ object AuthService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 var headers = HashMap<String, String>()
-                headers.put(AUTH_KEY_NAME,"Bearer ${AuthService.token}")
+                headers.put(AUTH_KEY_NAME,"Bearer ${App.prefs.authToken}")
                 return headers
             }
         }
 
-        Volley.newRequestQueue(context).add(findUserRequest)
+        App.prefs.requestQueue.add(findUserRequest)
     }
 }

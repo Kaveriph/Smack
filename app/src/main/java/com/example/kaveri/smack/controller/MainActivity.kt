@@ -50,6 +50,9 @@ class MainActivity : AppCompatActivity() {
         socket.on("channelCreated", onNewChannel)
 
         setupAdapters()
+        if(App.prefs.isLoggedIn) {
+            AuthService.findUserByEmail(this){}
+        }
     }
 
     private fun setupAdapters() {
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loginButtonNavClicked(view:View) {
-        if(AuthService.isLogedIn) {
+        if(App.prefs.isLoggedIn) {
             UserDataService.logout()
             userNameText.text = ""
             userEmailText.text = ""
@@ -80,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addChannelBtnClick(view:View) {
-        if(AuthService.isLogedIn) {
+        if(App.prefs.isLoggedIn) {
             val builder = AlertDialog.Builder(this)
             val dialogView = layoutInflater.inflate(R.layout.add_channel_dialogue, null)
             builder.setView(dialogView).create()
@@ -105,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
     var broadCastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-            if(AuthService.isLogedIn) {
+            if(App.prefs.isLoggedIn) {
                 userNameText.text  = UserDataService.name
                 userEmailText.text = UserDataService.email
                 loginBtn.text = resources.getString(R.string.logout)

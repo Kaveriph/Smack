@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
             AuthService.loginUser(this, RegisterUser(email, password), { succ ->
                 Toast.makeText(this, "success : $succ", Toast.LENGTH_SHORT).show()
                 if (succ) {
-                    println("Token : ${AuthService.token}")
+                    println("Token : ${App.prefs.authToken}")
                     AuthService.findUserByEmail(this, { findSucc ->
                         enableDisableSpinner(false);
                         if (findSucc) {

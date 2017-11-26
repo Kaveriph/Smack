@@ -5,6 +5,7 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
+import com.example.kaveri.smack.controller.App
 import com.example.kaveri.smack.model.Channel
 import com.example.kaveri.smack.utilities.AUTH_KEY_NAME
 import com.example.kaveri.smack.utilities.URL_GET_CHANNELS
@@ -48,11 +49,11 @@ object MessageService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                headers.put(AUTH_KEY_NAME,"Bearer ${AuthService.token}")
+                headers.put(AUTH_KEY_NAME,"Bearer ${App.prefs.authToken}")
                 return headers
             }
         }
 
-        Volley.newRequestQueue(context).add(channelRequest)
+        App.prefs.requestQueue.add(channelRequest)
     }
 }
