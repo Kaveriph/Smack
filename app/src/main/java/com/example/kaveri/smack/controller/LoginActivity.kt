@@ -1,9 +1,12 @@
 package com.example.kaveri.smack.controller
 
+import android.content.Context
 import android.content.Intent
+import android.inputmethodservice.InputMethodService
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.kaveri.smack.R
 import com.example.kaveri.smack.model.RegisterUser
@@ -21,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
         enableDisableSpinner(true);
         val email = emailText.text.toString()
         val password = passwordText.text.toString()
+        hideKeyboard()
         if(email.isNotEmpty() && password.isNotEmpty()) {
             AuthService.loginUser(this, RegisterUser(email, password), { succ ->
                 Toast.makeText(this, "success : $succ", Toast.LENGTH_SHORT).show()
@@ -29,10 +33,10 @@ class LoginActivity : AppCompatActivity() {
                     AuthService.findUserByEmail(this, { findSucc ->
                         enableDisableSpinner(false);
                         if (findSucc) {
-                            println("found the user sucessfully")
+                            displayError("found the user sucessfully")
                             finish()
                         } else {
-                            println("failed to find the user")
+                            displayError("failed to find the user")
                         }
                     })
                 } else {
@@ -41,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             })
         } else {
-            displayError("")
+            displayError("Email and password cannot be empty")
             enableDisableSpinner(false)
         }
     }
@@ -58,13 +62,20 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun displayError(strMsg: String) {
-        Toast.makeText(this,strMsg, Toast.LENGTH_SHORT);
+        Toast.makeText(this,strMsg, Toast.LENGTH_SHORT).show();
     }
 
     fun signUpHereClicked(view:View) {
         val createUserIntent = Intent(this, CreateUserActivity::class.java)
         startActivity(createUserIntent)
         finish()
+    }
+
+    fun hideKeyboard() {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if(inputManager.isAcceptingText) {
+            inputManager.hideSoftInputFromInputMethod(currentFocus.windowToken, 0)
+        }
     }
 
 }
