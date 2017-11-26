@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.example.kaveri.smack.R
 import com.example.kaveri.smack.model.Channel
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     //create sockets -
     val socket = IO.socket(SOCKET_URL)
+    lateinit var channelAdapter : ArrayAdapter<Channel>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,6 +48,13 @@ class MainActivity : AppCompatActivity() {
 
         socket.connect()
         socket.on("channelCreated", onNewChannel)
+
+        setupAdapters()
+    }
+
+    private fun setupAdapters() {
+        channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
+        channel_list.adapter = channelAdapter
     }
 
     override fun onBackPressed() {
@@ -94,13 +104,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     var broadCastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
+        override fun onReceive(context: Context, intent: Intent?) {
             if(AuthService.isLogedIn) {
                 userNameText.text  = UserDataService.name
                 userEmailText.text = UserDataService.email
                 loginBtn.text = resources.getString(R.string.logout)
                 userProfileImg.setImageResource(resources.getIdentifier(UserDataService.avatarName,"drawable",packageName))
                 userProfileImg.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
+
+                MessageService.getChannels(context, { foundChannels ->
+                    if(foundChannels) {
+                        channelAdapter.notifyDataSetChanged()
+                    }
+
+                })
             }
 
         }
@@ -128,6 +145,7 @@ class MainActivity : AppCompatActivity() {
             val newChannel = Channel(channelName, channelDescription, channelId)
             MessageService.channels.add(newChannel)
             println("${newChannel.name} ${newChannel.description} ${newChannel.id}")
+            channelAdapter.notifyDataSetChanged()
         }
     }
 }
