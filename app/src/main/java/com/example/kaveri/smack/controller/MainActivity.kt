@@ -26,6 +26,7 @@ import io.socket.client.IO
 import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     //create sockets -
     val socket = IO.socket(SOCKET_URL)
     lateinit var channelAdapter : ArrayAdapter<Channel>
+    var selectedChannel : Channel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,11 @@ class MainActivity : AppCompatActivity() {
         socket.connect()
         socket.on("channelCreated", onNewChannel)
 
+        channel_list.setOnItemClickListener{_, _, i, _ ->
+            selectedChannel = MessageService.channels.get(i)
+            drawer_layout.closeDrawer(GravityCompat.START)
+            updateWithChannel()
+        }
         setupAdapters()
         if(App.prefs.isLoggedIn) {
             AuthService.findUserByEmail(this){}
@@ -115,15 +122,23 @@ class MainActivity : AppCompatActivity() {
                 userProfileImg.setImageResource(resources.getIdentifier(UserDataService.avatarName,"drawable",packageName))
                 userProfileImg.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
 
-                MessageService.getChannels(context, { foundChannels ->
+                MessageService.getChannels({ foundChannels ->
                     if(foundChannels) {
-                        channelAdapter.notifyDataSetChanged()
+                        if(MessageService.channels.size > 0) {
+                            selectedChannel = MessageService.channels[0]
+                            channelAdapter.notifyDataSetChanged()
+                            updateWithChannel()
+                        }
                     }
 
                 })
             }
 
         }
+    }
+
+    fun updateWithChannel() {
+        mainChannelName.text = "#${ selectedChannel?.name}"
     }
 
     override fun onDestroy() {

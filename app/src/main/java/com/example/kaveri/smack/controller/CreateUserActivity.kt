@@ -60,13 +60,13 @@ class CreateUserActivity : AppCompatActivity() {
         val userName = signupUserNameText.text.toString()
         var registerUser = RegisterUser(signupEmailText.text.toString(), signupPasswordText.text.toString())
         if(userName.isNotEmpty() && signupEmailText.text.toString().isNotEmpty() && signupPasswordText.text.toString().isNotEmpty()) {
-            AuthService.registerUser(this, registerUser, { registrationSucc ->
+            AuthService.registerUser( registerUser, { registrationSucc ->
                 if (registrationSucc) {
                     println("$TAG Registered the user succesfully")
-                    AuthService.loginUser(this, registerUser, { loginSucc ->
+                    AuthService.loginUser( registerUser, { loginSucc ->
                         if (loginSucc) {
                             println("$TAG Logged in successfully")
-                            AuthService.createUser(this, CreateUser(userName, registerUser.email, userAvatar, avatarColor), { createUserSucc ->
+                            AuthService.createUser(CreateUser(userName, registerUser.email, userAvatar, avatarColor), { createUserSucc ->
                                 if (createUserSucc) {
                                     println("$TAG created user succesfully")
                                     enableSpinner(false)

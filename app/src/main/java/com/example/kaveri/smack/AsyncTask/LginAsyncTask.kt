@@ -12,7 +12,7 @@ import okhttp3.Response
 class LoginAsyncTask(val context : Context) : AsyncTask<String, Void, Response>() {
     val TAG = "LoginAsyncTask"
     override fun doInBackground(vararg p0: String?): Response {
-        return AuthService.loginUser(context, RegisterUser("dummyUser","dummyPasword"))
+        return AuthService.loginUser( RegisterUser("dummyUser","dummyPasword"))
     }
 
     override fun onPostExecute(result: Response?) {

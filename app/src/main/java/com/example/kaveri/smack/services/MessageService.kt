@@ -22,7 +22,7 @@ object MessageService {
     val TAG = "MessageService"
 
 
-    fun getChannels(context : Context, complete:(Boolean) -> Unit) {
+    fun getChannels(complete:(Boolean) -> Unit) {
         var channelRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null, Response.Listener { response ->
             Log.d(TAG, "response code  ${response}")
             try {

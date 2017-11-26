@@ -29,7 +29,7 @@ object AuthService {
     lateinit var email: String
     var isLogedIn: Boolean = false*/
 
-    fun registerUser(context : Context, user:RegisterUser, complete: (Boolean) -> Unit) {
+    fun registerUser(user:RegisterUser, complete: (Boolean) -> Unit) {
 
          var jsonObg = Gson().toJson(user)
 
@@ -54,7 +54,7 @@ object AuthService {
         App.prefs.requestQueue.add(request)
      }
 
-    fun registerUser(context: Context, user: RegisterUser): Response {
+    fun registerUser(user: RegisterUser): Response {
 
         var requestBody = RequestBody.create(MediaType.parse(MEDIA_TYPE), Gson().toJson(user).toString())
         var client = OkHttpClient()
@@ -67,7 +67,7 @@ object AuthService {
         return response
     }
 
-    fun loginUser(context: Context, user: RegisterUser): Response {
+    fun loginUser(user: RegisterUser): Response {
         var jsonUser = Gson().toJson(user)
         var requestBody = RequestBody.create(MediaType.parse(MEDIA_TYPE), jsonUser)
         var client = OkHttpClient()
@@ -79,7 +79,7 @@ object AuthService {
         return response
     }
 
-    fun loginUser(context: Context, user: RegisterUser, complete: (Boolean) -> Unit) {
+    fun loginUser(user: RegisterUser, complete: (Boolean) -> Unit) {
         var jsonUser = Gson().toJson(user)
 
         var request = object : JsonObjectRequest(Method.POST, URL_LOGIN, null,
@@ -110,7 +110,7 @@ object AuthService {
         App.prefs.requestQueue.add(request)
     }
 
-    fun createUser(context:Context, createUser: CreateUser, complete:(Boolean) -> Unit) {
+    fun createUser(createUser: CreateUser, complete:(Boolean) -> Unit) {
         val jsonObj = Gson().toJson(createUser)
 
         val request = object: JsonObjectRequest(Method.POST, URL_CREATE_USER, null, com.android.volley.Response.Listener{response ->

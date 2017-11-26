@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         val password = passwordText.text.toString()
         hideKeyboard()
         if(email.isNotEmpty() && password.isNotEmpty()) {
-            AuthService.loginUser(this, RegisterUser(email, password), { succ ->
+            AuthService.loginUser( RegisterUser(email, password), { succ ->
                 Toast.makeText(this, "success : $succ", Toast.LENGTH_SHORT).show()
                 if (succ) {
                     println("Token : ${App.prefs.authToken}")
