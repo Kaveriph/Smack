@@ -20,13 +20,18 @@ import com.example.kaveri.smack.R
 import com.example.kaveri.smack.R.id.*
 import com.example.kaveri.smack.services.AuthService
 import com.example.kaveri.smack.services.UserDataService
+import com.example.kaveri.smack.utilities.BASE_URL
 import com.example.kaveri.smack.utilities.BROADCAST_USER_DATA_CHANGE
+import com.example.kaveri.smack.utilities.SOCKET_URL
+import io.socket.client.IO
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    //create sockets -
+    val socket = IO.socket(SOCKET_URL)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,7 +43,15 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadCastReceiver, IntentFilter(BROADCAST_USER_DATA_CHANGE) )
-        hideKeyboard()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        socket.connect()
     }
 
     override fun onBackPressed() {
@@ -74,18 +87,17 @@ class MainActivity : AppCompatActivity() {
                 val channelDescText = dialogView.findViewById<EditText>(R.id.addchannel_desc_txt)
                 val channelName = channelNameTxt.text.toString()
                 val channelDescription = channelDescText.text.toString()
-                hideKeyboard()
+                socket.emit("newChannel",channelName, channelDescription)
             }
             builder.setNegativeButton("Cancel") {dialogInterface, i ->
                 //cancel or closethe dialog
-                hideKeyboard()
             }
             builder.show()
         }
     }
 
     fun sendMessageBtnClicked(view:View) {
-
+        hideKeyboard()
     }
 
     var broadCastReceiver = object : BroadcastReceiver() {
@@ -102,8 +114,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        socket.disconnect()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadCastReceiver)
+        super.onDestroy()
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     fun hideKeyboard() {
