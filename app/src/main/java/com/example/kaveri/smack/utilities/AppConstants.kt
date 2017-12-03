@@ -11,5 +11,7 @@ const val URL_GET_USER = BASE_URL+"/user/byEmail/"
 const val AUTH_KEY_NAME= "Authorization"
 const val SOCKET_URL = "http://chattychatkot.herokuapp.com/"
 const val URL_GET_CHANNELS = "${BASE_URL}channel"
+const val URL_GET_MESSAGES_BY_CHANNEL= BASE_URL+"message/byChannel/"
+
 //BROADCAST RECIEVER
 const val BROADCAST_USER_DATA_CHANGE = "BROADCAST_USER_DATA_CHANGE"
