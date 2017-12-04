@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -33,6 +34,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val TAG :String= "MainActivity"
@@ -98,6 +102,7 @@ class MainActivity : AppCompatActivity() {
             userProfileImg.setBackgroundColor(Color.TRANSPARENT)
             channelAdapter.notifyDataSetChanged()
             messageAdapter.notifyDataSetChanged()
+            mainChannelName.text = getString(R.string.please_login_in)
         } else {
             val loginIntent = Intent(this, LoginActivity::class.java)
             startActivity(loginIntent)
@@ -224,4 +229,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }
