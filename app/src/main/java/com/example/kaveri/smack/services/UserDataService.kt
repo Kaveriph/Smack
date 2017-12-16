@@ -2,6 +2,8 @@ package com.example.kaveri.smack.services
 
 import android.graphics.Color
 import com.example.kaveri.smack.controller.App
+import com.example.kaveri.smack.presenter.MainMvpPresenter
+import com.example.kaveri.smack.presenter.MvpPresenter
 import java.util.*
 
 /**
@@ -14,7 +16,7 @@ object UserDataService {
     var avatarColor = ""
     var id= ""
 
-    fun logout () {
+    fun logout (mMainMvpPresenter: MvpPresenter) {
         id = ""
         name = ""
         email = ""
@@ -23,10 +25,11 @@ object UserDataService {
         App.prefs.authToken = ""
         App.prefs.isLoggedIn = false
         App.prefs.userEmail= ""
-        MessageService.clearChannels()
-        MessageService.clearMessages()
+        mMainMvpPresenter.clearChannels()
+        mMainMvpPresenter.clearMessages()
     }
-    fun returnAvatarColor(componets:String):Int  {
+
+    fun returnAvatarColorInRgb(componets:String):Int  {
 
         var stripedColor = componets
         stripedColor = stripedColor.replace("[","")
@@ -46,4 +49,5 @@ object UserDataService {
 
         return  Color.rgb(r,g,b)
     }
+
 }

@@ -2,7 +2,6 @@ package com.example.kaveri.smack.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,7 +43,7 @@ class MessageAdapter(var context: Context, var messages:ArrayList<Message>) : Re
             val resourceId = context.resources.getIdentifier(message.userAvatar, "drawable", context.packageName)
 
             userImage?.setImageResource(resourceId)
-            userImage?.setBackgroundColor(UserDataService.returnAvatarColor(message.userAvatarColor))
+            userImage?.setBackgroundColor(UserDataService.returnAvatarColorInRgb(message.userAvatarColor))
             userName?.text = message.userName
             timeStamp?.text = returnDatetring(message.timeStamp)
             mesageBody?.text = message.message
